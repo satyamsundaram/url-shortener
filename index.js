@@ -1,5 +1,5 @@
 import express from "express"
-import { createClient } from "redis"
+import mysql from "mysql2/promise"
 import { createHmac } from "node:crypto"
 import 'dotenv/config'
 
@@ -8,22 +8,27 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+const getMysqlConnecion = async () => {
+    try {
+        const pool = await mysql.createPool({
+          host: process.env.MYSQL_HOST,
+          user: process.env.MYSQL_USER,
+          password: process.env.MYSQL_PASSWORD,
+          database: process.env.MYSQL_DATABASE,
+        });
 
-const getRedisClient = async () => {
-    const client = await createClient()
-    .on("error", (err) => console.log("Redis client error", err))
-    .on("connect", () => console.log("Redis client connected"))
-    .on("reconnecting", () => console.log("Redis client reconnecting"))
-    .on("ready", () => console.log("Redis client ready"))
-    .connect()
-
-    return client;
+        return pool;
+    } catch(err) {
+        console.log("Error in getting mysql connection: ", err);
+        throw new Error("Error in getting mysql connection: " + err)
+    }
 }
 
 const isValid = (url) => {
     try {
         return (url.startsWith("http://") || url.startsWith("https://")) && url.includes(".") && url.length > 10
     } catch (error) {
+        console.log("Error in validating url: ", error)
         throw new Error("Error in validating url: " + error)
     }
 }
@@ -44,43 +49,49 @@ const getShortUrl = (url) => {
 
         return encodedHash;
     } catch(error) {
+        console.log("Error in getting short url: ", error)
         throw new Error("Error in getting short url: " + error)
     }
 }
 
 app.post("/shorten", async (req, res) => {
     try {
-        const { originalUrl } = req.body;
+        let { originalUrl, validUntil, maxVisits } = req.body;
         if(!isValid(originalUrl)) return res.status(400).json({error: 'Please enter a valid url'})
         
         const shortUrl = getShortUrl(originalUrl);
+        if(!validUntil) validUntil = null;
+        if(!maxVisits) maxVisits = null;
         
-        const client = await getRedisClient();
-        if(await client.exists(shortUrl).catch((err) => console.log("Error in GET:", err)))
-            return res.status(409).json({error: 'Shortened url already exists for this url'})
-        
-        await client.set(shortUrl, originalUrl).catch((err) => console.log("Error in SET:", err))
-        
-        client.disconnect();
+        const client = await getMysqlConnecion();
+        const [results] = await client.execute(
+            'SELECT COUNT(*) FROM `urls` WHERE `short_url` = ?',
+            [shortUrl]
+        )
+        if(results[0]['COUNT(*)'] == 1) return res.status(409).json({error: 'Shortened url already exists for this url'})
+
+        await client.execute(
+            'INSERT INTO `urls` (`short_url`, `original_url`, `valid_until`, `max_visits`) VALUES (?, ?, ?, ?)',
+            [shortUrl, originalUrl, validUntil, maxVisits]
+        )      
         res.status(201).json({ shortUrl });
     } catch(error) {
+        console.log("Error shortening url: ", error);
         res.status(500).json({ "Error shortening url": error.message });
     }
 })
 
 app.get("/listurls", async (req, res) => {
-    const client = await getRedisClient();
-    let urls = []
-    
-    const keys = await client.keys("*").catch((err) => console.log("Error in GET:", err))
-    
-    for (const key in keys) {
-        const value = await client.get(keys[key])
-        urls.push({originalUrl: value, shortUrl: keys[key]})
+    try {
+        const client = await getMysqlConnecion();
+        const [results] = await client.execute(
+            'SELECT * FROM `urls`'
+        )
+        res.status(200).json({ "urls": results });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ "Error getting urls": err.message });
     }
-
-    await client.disconnect();
-    res.status(200).json({ urls });
 })
 
 app.listen(PORT, () => {
