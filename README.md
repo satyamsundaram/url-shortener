@@ -36,3 +36,7 @@ INSERT INTO urls (short_url, original_url) VALUES ('a23bde', 'https://www.facebo
 INSERT INTO urls (short_url, original_url, valid_until) VALUES ('3h2h2d', 'https://www.twitter.com', '2024-03-29 00:00:00');
 INSERT INTO urls (short_url, original_url, max_visits) VALUES ('4h2h22', 'https://www.pinterest.com', 10);
 ```
+
+### todo
+- create separate files for different functionalities
+- create separate functions wherever possible
