@@ -21,12 +21,11 @@
 ```
 CREATE TABLE IF NOT EXISTS urls (
     short_url VARCHAR(100) NOT NULL PRIMARY KEY,
-    original_url VARCHAR(512) NOT NULL,
+    original_url VARCHAR(512) NOT NULL UNIQUE,
     creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     valid_until TIMESTAMP,
     visit_count INT NOT NULL DEFAULT 0,
-    max_visits INT,
-    UNIQUE (original_url),
+    max_visits INT
 );
 
 // valid_until TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP + INTERVAL 30 DAY
@@ -40,3 +39,6 @@ INSERT INTO urls (short_url, original_url, max_visits) VALUES ('4h2h22', 'https:
 ### todo
 - create separate files for different functionalities
 - create separate functions wherever possible
+
+### Notes
+- table CSS borrowed from [this](https://codepen.io/AllThingsSmitty/pen/MyqmdM) codepen

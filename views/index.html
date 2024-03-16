@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <title>URL Shortener</title>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+    <form id="shortenForm">
+        <label for="originalUrl">Enter URL:</label>
+        <input type="text" name="originalUrl" id="originalUrl" required>
+        <button type="submit">Shorten URL</button>
+    </form>
+    <div id="result"></div>
+    <table id="urlsListTable">
+        <thead>
+            <tr id="urlsListHeaderRow">
+                <th scope="col">Short url</th>
+                <th scope="col">Original url</th>
+                <th scope="col">Valid until</th>
+                <th scope="col">Max visits</th>
+                <th scope="col">Visit Count</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        </tbody>
+    </table>
+    <footer>
+        <p>Made with ❤️ by <a href="https://github.com/satyamsundaram" target="_blank">Satyam Sundaram</a></p><br>
+        <p>&copy; Url Shortener <span id="year"></span>. All lefts reversed.</p>
+    </footer>
+    <script src="/js/index.js"></script>
+</body>
+</html>

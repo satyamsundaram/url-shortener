@@ -1,0 +1,152 @@
+* {
+    margin: 0 auto;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+h1 {
+    margin: 20px 0;
+}
+
+.short-url, .error {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    color: red;
+    font-weight: bold;
+    width: 350px;
+}
+
+.short-url {
+    color: green;
+}
+
+#shortenForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px 0;
+}
+
+input#originalUrl {
+    width: 350px;
+    height: 30px;
+    margin: 10px 0;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0 10px;
+}
+
+#shortenForm button {
+    width: 250px;
+    height: 30px;
+    margin: 10px 0;
+    border: 1px solid rgb(37, 118, 224);
+    border-radius: 5px;
+    padding: 0 10px;
+    cursor: pointer;
+    background-color: rgb(37, 118, 224);
+    color: white;
+    font-weight: bold;
+}
+
+#shortenForm button:hover {
+    background-color: rgb(0, 110, 255);
+}
+
+#shortenForm button:active {
+    border: 1px solid black;
+    transform: scale(0.98);
+}
+
+#result {
+    margin-bottom: 25px;
+}
+
+#urlsListTable {
+    display: none;
+}
+
+#table {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+table tr {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: .35em;
+}
+
+table th,
+table td {
+    padding: .625em;
+    text-align: center;
+    width: 97vw;
+}
+
+table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+@media screen and (max-width: 600px) {
+    table {
+        border: 0;
+    }
+
+    table thead {
+        border: none;
+        clip-path: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+    }
+
+    table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    table td:last-child {
+        border-bottom: 0;
+    }
+}
+
+footer {
+    margin: 20px 0;
+}

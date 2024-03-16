@@ -1,0 +1,28 @@
+* {
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url("/images/404.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    text-align: center;
+}
+
+#div404 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: white;
+}
+
+a {
+    color: blue;
+    margin-top: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
