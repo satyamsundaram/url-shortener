@@ -21,8 +21,10 @@ body {
 }
 
 a {
-    color: blue;
+    color: yellow;
+    text-decoration: underline;
+    text-shadow: black 0 0 10px;
     margin-top: 10px;
-    font-size: 1.2em;
+    font-size: 2em;
     font-weight: bold;
 }
