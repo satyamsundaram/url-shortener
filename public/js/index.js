@@ -12,6 +12,8 @@ document.getElementById("shortenForm").addEventListener("submit", async (e) => {
       body: JSON.stringify({ originalUrl, validUntil, maxVisits }),
     });
 
+    document.getElementById("result").innerHTML = "";
+
     const data = await response.json();
     if (data.error && data.shortUrl) {
       document.getElementById(
@@ -30,10 +32,9 @@ document.getElementById("shortenForm").addEventListener("submit", async (e) => {
       ).innerHTML = `<p class="error">${data.error}</p>`;
     }
 
-    setTimeout(() => {
-      document.getElementById("result").innerHTML = "";
-      document.getElementById("originalUrl").value = "";
-    }, 5000);
+    document.getElementById("originalUrl").value = "";
+    document.getElementById("validUntil").value = "";
+    document.getElementById("maxVisits").value = "";
   } catch (error) {
     console.log("Error in shortening url: ", error);
     document.getElementById(
