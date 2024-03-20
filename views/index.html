@@ -11,6 +11,13 @@
     <form id="shortenForm">
         <label for="originalUrl">Enter URL:</label>
         <input type="text" name="originalUrl" id="originalUrl" required>
+        
+        <label for="validUntil">Expiry Date (optional):</label>
+        <input type="date" name="validUntil" id="validUntil">
+
+        <label for="maxVisits">Max Visits (optional):</label>
+        <input type="number" name="maxVisits" id="maxVisits" min="0">
+
         <button type="submit">Shorten URL</button>
     </form>
     <div id="result"></div>

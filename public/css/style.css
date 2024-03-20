@@ -32,17 +32,26 @@ h1 {
     margin: 30px 0;
 }
 
-input#originalUrl {
-    width: 350px;
+#shortenForm input {
     height: 30px;
-    margin: 10px 0;
+    margin-bottom: 20px;
     border: 1px solid black;
     border-radius: 5px;
     padding: 0 10px;
+    width: 150px;
+}
+
+#shortenForm label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input#originalUrl {
+    width: 350px;
 }
 
 #shortenForm button {
-    width: 250px;
+    width: 350px;
     height: 30px;
     margin: 10px 0;
     border: 1px solid rgb(37, 118, 224);
@@ -96,7 +105,7 @@ table tr {
 table th,
 table td {
     padding: .625em;
-    text-align: center;
+    text-align: left;
     width: 97vw;
 }
 

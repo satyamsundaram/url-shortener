@@ -1,13 +1,15 @@
 document.getElementById("shortenForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const originalUrl = document.getElementById("originalUrl").value;
+  const validUntil = document.getElementById("validUntil").value;
+  const maxVisits = document.getElementById("maxVisits").value;
   try {
     const response = await fetch("/shorten", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ originalUrl }),
+      body: JSON.stringify({ originalUrl, validUntil, maxVisits }),
     });
 
     const data = await response.json();
@@ -39,6 +41,11 @@ document.getElementById("shortenForm").addEventListener("submit", async (e) => {
     ).innerHTML = `<p class="error">An error occurred, please try again later.</p>`;
   }
 });
+
+const truncate = (url, maxLength = 30) => {
+  return (url.length > maxLength) ?
+    url.substring(0, maxLength - 1) + "…" : url;
+}
 
 const listUrls = async () => {
     try {
@@ -80,10 +87,10 @@ const listUrls = async () => {
                 a = document.createElement("a");
                 a.target = "_blank";
                 a.href = data.urls[i].original_url;
-                a.appendChild(document.createTextNode(data.urls[i].original_url));
+                a.appendChild(document.createTextNode(truncate(data.urls[i].original_url)));
                 originalUrlTd.appendChild(a);
 
-                validUntilTd.innerHTML = data.urls[i].valid_until ? new Date(data.urls[i].valid_until).toLocaleString() : "-";
+                validUntilTd.innerHTML = data.urls[i].valid_until ? new Date(data.urls[i].valid_until).toLocaleDateString() : "-";
                 maxVisitsTd.innerHTML = data.urls[i].max_visits ? data.urls[i].max_visits : "-";
                 visitsTd.innerHTML = data.urls[i].visit_count ? data.urls[i].visit_count : "-";
                 
@@ -107,4 +114,5 @@ const listUrls = async () => {
 document.addEventListener("DOMContentLoaded", () => {
     listUrls();
     document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("validUntil").setAttribute("min", new Date().toISOString().split("T")[0]);
 })

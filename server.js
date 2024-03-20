@@ -104,7 +104,7 @@ app.get("/listurls", async (req, res) => {
     try {
         const client = await getMysqlConnecion();
         const [results] = await client.execute(
-            'SELECT * FROM `urls`'
+            'SELECT * FROM `urls` ORDER BY `creation_date` DESC'
         )
         res.status(200).json({ "urls": results });
     } catch (err) {
