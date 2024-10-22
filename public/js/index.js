@@ -18,11 +18,11 @@ document.getElementById("shortenForm").addEventListener("submit", async (e) => {
     if (data.error && data.shortUrl) {
       document.getElementById(
         "result"
-      ).innerHTML = `<p class="error">⚠️ ${data.error}: <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a></p>`;
+      ).innerHTML = `<p class="error">⚠️ ${data.error}: <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a> <i class="fa-solid fa-copy" onclick="copyToClipboard('${data.shortUrl}', 1)"></i></p>`;
     } else if (data.shortUrl) {
       document.getElementById(
         "result"
-      ).innerHTML = `<p class="short-url">Short URL created: <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a></p>`;
+      ).innerHTML = `<p class="short-url">Short URL created: <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a> <i class="fa-solid fa-copy" onclick="copyToClipboard('${data.shortUrl}', 1)"></i></p>`;
       
       document.getElementById("urlsListTable").style.display = "none";
       listUrls();
@@ -42,6 +42,18 @@ document.getElementById("shortenForm").addEventListener("submit", async (e) => {
     ).innerHTML = `<p class="error">An error occurred, please try again later.</p>`;
   }
 });
+
+const copyToClipboard = (url, isShortUrl) => {
+  if (isShortUrl) url = window.location.origin + "/" + url;
+  navigator.clipboard.writeText(url);
+  document.getElementById("notification").innerHTML = "Copied to clipboard!";
+  document.getElementById("notification").style.display = "block";
+  
+  setTimeout(() => {
+    document.getElementById("notification").innerHTML = "";
+    document.getElementById("notification").style.display = "none";
+  }, 1000);
+}
 
 const truncate = (url, maxLength = 30) => {
   return (url.length > maxLength) ?
@@ -85,11 +97,25 @@ const listUrls = async () => {
                 a.appendChild(document.createTextNode(data.urls[i].short_url));
                 shortUrlTd.appendChild(a);
 
+                let copyBtn = document.createElement("i");
+                copyBtn.classList.add("fa-solid");
+                copyBtn.classList.add("fa-copy");
+                copyBtn.onclick = () => copyToClipboard(data.urls[i].short_url, 1);
+                shortUrlTd.appendChild(document.createTextNode(" "));
+                shortUrlTd.appendChild(copyBtn);
+
                 a = document.createElement("a");
                 a.target = "_blank";
                 a.href = data.urls[i].original_url;
                 a.appendChild(document.createTextNode(truncate(data.urls[i].original_url)));
                 originalUrlTd.appendChild(a);
+
+                // let copyBtn2 = document.createElement("i");
+                // copyBtn2.classList.add("fa-solid");
+                // copyBtn2.classList.add("fa-copy");
+                // copyBtn2.onclick = () => copyToClipboard(data.urls[i].original_url, 0);
+                // originalUrlTd.appendChild(document.createTextNode(" "));
+                // originalUrlTd.appendChild(copyBtn2);
 
                 validUntilTd.innerHTML = data.urls[i].valid_until ? new Date(data.urls[i].valid_until).toLocaleDateString() : "-";
                 maxVisitsTd.innerHTML = data.urls[i].max_visits ? data.urls[i].max_visits : "-";

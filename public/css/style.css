@@ -76,6 +76,32 @@ input#originalUrl {
     margin-bottom: 25px;
 }
 
+.fa-copy {
+    cursor: pointer;
+    color: blue;
+}
+
+.fa-copy:hover {
+    color: black;
+}
+
+.fa-copy:active {
+    transform: scale(0.96);
+}
+
+#notification {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgb(37, 118, 224);
+    color: white;
+    font-weight: bold;
+    z-index: 999;
+}
+
 #urlsListTable {
     display: none;
 }

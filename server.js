@@ -57,19 +57,30 @@ const shortUrlExists = async (client, shortUrl) => {
 
 const getShortUrl = (url) => {
     try {
-        const hash = createHmac("sha256", process.env.HASH_SECRET)
+      /*
+        only supports 8 hex characters, hence 8 * 4 = 32 bits, hence 2^32 = 4,294,967,296 possible short urls
+        using a fixed hash_secret without any per-url randomness or salt can lead to repeating patterns, hence reduced security
+        not handling collisions yet
+        secure hash to prevent predictable short urls
+
+        So, in a perfect world where there are no hash collisions (two different URLs producing the same truncated hash), 
+        this system can uniquely support up to about 4.29 billion URLs. However, because truncating the hash 
+        increases the risk of collisions, the practical limit would be somewhat lower, depending largely on the 
+        distribution and frequency of the URLs being hashed.
+        */
+      const hash = createHmac("sha256", process.env.HASH_SECRET)
         .update(url)
         .digest("hex");
 
-        const truncatedHash = hash.slice(0, 8);
+      const truncatedHash = hash.slice(0, 8);
 
-        const encodedHash = Buffer.from(truncatedHash, "hex")
+      const encodedHash = Buffer.from(truncatedHash, "hex")
         .toString("base64")
         .replace(/\+/g, "S")
         .replace(/\//g, "x")
         .replace(/=/g, "");
 
-        return encodedHash;
+      return encodedHash;
     } catch(error) {
         console.log("Error in getting short url: ", error)
         throw new Error("Error in getting short url: " + error)

@@ -19,13 +19,22 @@
 
 ### Mysql
 ```
+CREATE TABLE IF NOT EXISTS users {
+    google_id VARCHAR(100) NOT NULL PRIMARY KEY,
+    email VARCHAR(512) NOT NULL UNIQUE,
+    username VARCHAR(100) NOT NULL,
+}
+
 CREATE TABLE IF NOT EXISTS urls (
-    short_url VARCHAR(100) NOT NULL PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    short_url VARCHAR(100) NOT NULL,
     original_url VARCHAR(512) NOT NULL UNIQUE,
     creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     valid_until TIMESTAMP,
     visit_count INT NOT NULL DEFAULT 0,
-    max_visits INT
+    max_visits INT,
+    user_id VARCHAR(100) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(google_id)
 );
 
 // valid_until TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP + INTERVAL 30 DAY
